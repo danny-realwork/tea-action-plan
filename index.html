@@ -7,7 +7,6 @@
 <meta name="theme-color" content="#191940">
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
@@ -285,10 +284,10 @@ function headerHTML({showQR=true, showAdminLink=true, showHome=false, currentTit
   return `
   <header class="sticky top-0 z-30 bg-[var(--navy)] text-white">
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-      <div class="flex-1 min-w-0 leading-tight">
+      <button onclick="go('/')" class="flex-1 min-w-0 leading-tight text-left rounded-md hover:bg-white/5 active:bg-white/10 -mx-1 px-1" aria-label="홈으로">
         <div class="text-[10px] uppercase tracking-wider text-white/60 font-semibold">REALWORK</div>
         <div class="font-semibold text-white text-[15px] leading-tight">팀효과성 진단 액션플랜 pool</div>
-      </div>
+      </button>
       ${showHome ? `<button onclick="go('/')" class="p-2 rounded-lg hover:bg-white/10 active:bg-white/20" aria-label="홈" title="홈으로">
         ${homeIconSVG()}
       </button>` : ''}
@@ -510,7 +509,7 @@ function renderResult(app, subId){
   app.innerHTML = `
   ${headerHTML({showQR:true, showAdminLink:false})}
   <main class="max-w-3xl mx-auto px-4 pt-5 pb-10 fade-in">
-    <button onclick="go('/sub/${subId}')" data-hide-on-save class="mb-3 flex items-center gap-1 text-[13px] text-[var(--ink2)] hover:text-[var(--ink)]">
+    <button onclick="go('/sub/${subId}')" class="mb-3 flex items-center gap-1 text-[13px] text-[var(--ink2)] hover:text-[var(--ink)]">
       <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 5l-5 5 5 5"/></svg>
       다시 선택하기
     </button>
@@ -523,47 +522,13 @@ function renderResult(app, subId){
 
     <div class="space-y-3">${cardsHTML}</div>
 
-    <div class="mt-6 flex gap-2" data-hide-on-save>
-      <button onclick="saveResultImage('${subId}')" class="flex-1 btn-primary rounded-xl py-3 font-semibold">이미지로 저장</button>
-      <button onclick="go('/')" class="px-4 rounded-xl border border-[var(--line)] bg-white py-3 font-semibold">다른 요소 선택</button>
+    <div class="mt-6 flex gap-2">
+      <button onclick="go('/sub/${subId}')" class="flex-1 rounded-xl border border-[var(--line)] bg-white py-3 font-semibold">다시 선택하기</button>
+      <button onclick="go('/')" class="flex-1 btn-primary rounded-xl py-3 font-semibold">처음으로 돌아가기</button>
     </div>
   </main>
   ${footerHTML()}`;
 }
-
-window.saveResultImage = async function(subId){
-  const hit = getSub(subId);
-  if(!hit) return;
-  const app = document.getElementById('app');
-  if(!app) return;
-
-  // Hide interactive controls so the saved image matches the "read-only" view.
-  const hidden = Array.from(app.querySelectorAll('[data-hide-on-save]'));
-  const prevDisplay = hidden.map(el => el.style.display);
-  hidden.forEach(el => { el.style.display = 'none'; });
-
-  // Scroll to top so the sticky header renders at its natural position.
-  const prevScroll = window.scrollY;
-  window.scrollTo(0, 0);
-
-  try {
-    await new Promise(r=>setTimeout(r, 80));
-    const canvas = await html2canvas(app, {
-      backgroundColor: '#F6F7FB',
-      scale: 2,
-      useCORS: true,
-      windowWidth: document.documentElement.clientWidth,
-    });
-    const a = document.createElement('a');
-    a.download = `realwork_${hit.topic.id}_${hit.sub.id}.png`;
-    a.href = canvas.toDataURL('image/png');
-    a.click();
-  } catch(e){ alert('이미지 저장에 실패했어요: '+e.message); }
-  finally {
-    hidden.forEach((el,i) => { el.style.display = prevDisplay[i] || ''; });
-    window.scrollTo(0, prevScroll);
-  }
-};
 
 /* =========================================================================
    ADMIN VIEW
