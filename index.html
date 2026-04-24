@@ -159,15 +159,8 @@ function unflattenCards(rows, baseData){
 }
 
 async function loadData(){
-  // Try localStorage first
-  const cached = localStorage.getItem(LS_KEYS.cards);
-  if(cached){
-    try {
-      const parsed = JSON.parse(cached);
-      if(parsed && parsed.topics && parsed.topics.length===4) return parsed;
-    } catch(e){}
-  }
-  // Supabase
+  // Supabase is the source of truth when configured — fetch first so edits
+  // synced from the admin page show up on every device/browser.
   if(hasSupabase()){
     try {
       const rows = await sbFetch('action_plans?select=*&order=subtopic_id,order_index');
@@ -176,7 +169,15 @@ async function loadData(){
         localStorage.setItem(LS_KEYS.cards, JSON.stringify(data));
         return data;
       }
-    } catch(e){ console.warn('supabase load failed', e); }
+    } catch(e){ console.warn('supabase load failed, falling back to cache', e); }
+  }
+  // Offline / not configured — use localStorage cache if available
+  const cached = localStorage.getItem(LS_KEYS.cards);
+  if(cached){
+    try {
+      const parsed = JSON.parse(cached);
+      if(parsed && parsed.topics && parsed.topics.length===4) return parsed;
+    } catch(e){}
   }
   return DEFAULT_DATA;
 }
@@ -617,7 +618,7 @@ function adminTabBtn(key, label){
   const on = adminTab===key;
   return `<button onclick="adminTabSwitch('${key}')" class="px-3.5 py-2 rounded-xl text-[13px] font-semibold whitespace-nowrap ${on?'bg-[var(--navy)] text-white':'bg-white border border-[var(--line)] text-[var(--ink)] hover:bg-[var(--bg)]'}">${label}</button>`;
 }
-window.adminTabSwitch = function(key){ adminTab = key; adminRenderTab(); };
+window.adminTabSwitch = function(key){ adminTab = key; render(); };
 function adminRenderTab(){
   const el = document.getElementById('admin-body');
   if(!el) return;
