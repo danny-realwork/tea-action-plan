@@ -1,0 +1,5 @@
+{
+  "buildCommand": "sh -c 'printf \"window.__ADMIN_PW = %s;\\n\" \"\\\"$ADMIN_PASSWORD\\\"\" > config.js'",
+  "outputDirectory": ".",
+  "framework": null
+}
