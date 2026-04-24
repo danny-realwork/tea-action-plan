@@ -90,7 +90,7 @@ const ALL_TAGS = ['팀장','팀 전체','타팀과 함께'];
    DATA LAYER  — Supabase (if configured) + localStorage fallback
    ========================================================================= */
 const LS_KEYS = {
-  cards:      'rw_cards_v2',
+  cards:      'rw_cards_v3',
   selections: 'rw_selections_v2',
   admin:      'rw_admin_v2',
   adminPw:    'rw_admin_pw_v2',
@@ -286,7 +286,7 @@ function headerHTML({showQR=true, showAdminLink=true, showHome=false, currentTit
     <div class="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
       <div class="flex-1 min-w-0 leading-tight">
         <div class="text-[10px] uppercase tracking-wider text-white/60 font-semibold">REALWORK</div>
-        <div class="font-semibold text-white text-[15px] leading-tight">팀효과성 진단 액션플랜 <span style="font-style:italic;font-weight:500;">insight</span></div>
+        <div class="font-semibold text-white text-[15px] leading-tight">팀효과성 진단 액션플랜 pool</div>
       </div>
       ${showHome ? `<button onclick="go('/')" class="p-2 rounded-lg hover:bg-white/10 active:bg-white/20" aria-label="홈" title="홈으로">
         ${homeIconSVG()}
@@ -319,7 +319,7 @@ function footerHTML(){
   <footer class="mt-12 border-t border-[var(--line)] bg-white">
     <div class="max-w-3xl mx-auto px-4 py-5 flex items-center gap-3 text-[11.5px] text-[var(--ink2)]">
       ${realworkNavyLogoSVG(16)}
-      <span>© ${new Date().getFullYear()} REALWORK · 팀효과성 진단 액션플랜 <span style="font-style:italic;">insight</span></span>
+      <span>© ${new Date().getFullYear()} REALWORK · 팀효과성 진단 액션플랜 pool</span>
     </div>
   </footer>`;
 }
