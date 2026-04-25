@@ -451,7 +451,7 @@ function cardItemHTML(card, idx, topicId){
         <div class="flex-1 min-w-0 text-[var(--ink)]">
           <div class="flex flex-wrap gap-1 mb-1.5">${tagsHtml}</div>
           <div class="text-[14.5px] font-semibold leading-snug">${escapeHtml(card.actionPlan)}</div>
-          <div class="mt-2 text-[13px] text-[var(--ink2)] leading-relaxed">기대효과: ${escapeHtml(card.expectedEffect)}</div>
+          <div class="mt-2 text-[13px] text-[var(--ink2)] leading-relaxed">${escapeHtml(card.expectedEffect)}</div>
         </div>
       </div>
     </div>
@@ -502,7 +502,7 @@ function renderResult(app, subId){
       <div class="flex-1 min-w-0 text-[var(--ink)]">
         <div class="flex flex-wrap gap-1 mb-1.5">${(c.tags||[]).map(tag=>`<span class="chip ${TAG_STYLE[tag]||'tag-all'}">${escapeHtml(tag)}</span>`).join('')}</div>
         <div class="text-[15px] font-semibold leading-snug">${escapeHtml(c.actionPlan)}</div>
-        <div class="mt-2 text-[13px] text-[var(--ink2)] leading-relaxed">기대효과: ${escapeHtml(c.expectedEffect)}</div>
+        <div class="mt-2 text-[13px] text-[var(--ink2)] leading-relaxed">${escapeHtml(c.expectedEffect)}</div>
       </div>
     </div>
   </article>`).join('');
